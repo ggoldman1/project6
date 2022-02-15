@@ -2,6 +2,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import utils
 
 class BaseRegressor():
     def __init__(self, num_feats, learning_rate=0.1, tol=0.001, max_iter=100, batch_size=12):
@@ -70,7 +71,7 @@ class BaseRegressor():
             prev_update_size = np.mean(np.array(update_size_epoch))
             # Updating iteration number
             iteration += 1
-    
+
     def plot_loss_history(self):
         """
         Plots the loss history after training is complete.
@@ -88,6 +89,7 @@ class BaseRegressor():
         axs[0].set_ylabel('Train Loss')
         axs[1].set_ylabel('Val Loss')
         fig.tight_layout()
+        plt.show()
         
 
 # import required modules
@@ -107,6 +109,7 @@ class LogisticRegression(BaseRegressor):
         Returns: 
             gradients for given loss function (np.ndarray)
         """
+        # import pdb; pdb.set_trace()
         y_pred = self.make_prediction(X)
         error = y - y_pred
         grad = - X.T.dot(error)
@@ -127,7 +130,10 @@ class LogisticRegression(BaseRegressor):
             average loss 
         """
         y_pred = self.make_prediction(X)
-        return -((y * np.log(y_pred)) + ((1-y) * (np.log(1-y_pred)))).mean()
+        y_pred = np.where(y_pred == 1, 0.99999, y_pred)
+        y_pred = np.where(y_pred == 0, 0.00001, y_pred)
+        loss = -((y * np.log(y_pred)) + ((1-y) * (np.log(1-y_pred)))).mean()
+        return loss
     
     def make_prediction(self, X) -> np.array:
         """
@@ -141,11 +147,16 @@ class LogisticRegression(BaseRegressor):
         Returns: 
             y_pred for given X
         """
-        if X.shape[1] == self.num_feats:
-            X = np.hstack([X, np.ones((X.shape[0], 1))])
+        # import pdb; pdb.set_trace()
         data_times_features = X.dot(self.W).flatten()
         return 1/(1+np.e**(-data_times_features))
 
 
-
-    
+X_train, X_test, y_train, y_test = utils.loadDataset(features=['Penicillin V Potassium 500 MG', 'Computed tomography of chest and abdomen',
+                          'Plain chest X-ray (procedure)',  'Low Density Lipoprotein Cholesterol',
+                          'Creatinine'], split_percent=0.8)
+lr = LogisticRegression(X_train.shape[1], max_iter=100)
+# lr.W[5] = 0.01
+lr.train_model(X_train, y_train, X_test, y_test)
+print(lr.W)
+lr.plot_loss_history()
