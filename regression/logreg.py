@@ -111,9 +111,10 @@ class LogisticRegression(BaseRegressor):
         """
         # import pdb; pdb.set_trace()
         y_pred = self.make_prediction(X)
+        m = len(y_pred)
         error = y - y_pred
-        grad = - X.T.dot(error)
-        return grad
+        grad = -X.T.dot(error)
+        return (1/m)*grad
 
     def loss_function(self, X, y) -> float:
         """
@@ -155,7 +156,7 @@ class LogisticRegression(BaseRegressor):
 X_train, X_test, y_train, y_test = utils.loadDataset(features=['Penicillin V Potassium 500 MG', 'Computed tomography of chest and abdomen',
                           'Plain chest X-ray (procedure)',  'Low Density Lipoprotein Cholesterol',
                           'Creatinine'], split_percent=0.8)
-lr = LogisticRegression(X_train.shape[1], max_iter=100)
+lr = LogisticRegression(X_train.shape[1], max_iter=10000)
 # lr.W[5] = 0.01
 lr.train_model(X_train, y_train, X_test, y_test)
 print(lr.W)
