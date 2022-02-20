@@ -31,16 +31,16 @@ def test_updates():
 	assert np.mean(lr.loss_history_train[0:halfway]) > np.mean(lr.loss_history_train[halfway:halfway*2])
 
 	## Test 2: check that loss is low (below 1)
-	assert lr.loss_train_history[-1] < 1
+	assert lr.loss_history_train[-1] < 1
 
 	## Test 3: check tha tloss gets lower if we allow more iterations
 	num_iter = [10, 100, 1000, 10000]
 	prev = np.inf
 	for iter in num_iter:
-		lr = LogisticRegression(X_train.shape[1], max_iter=iter)
+		lr = regression.LogisticRegression(X_train.shape[1], max_iter=iter)
 		lr.train_model(X_train, y_train, X_test, y_test)
-		assert lr.loss_train_history[-1] < prev
-		prev = lr.loss_train_history[-1] < prev
+		assert lr.loss_history_train[-1] < prev
+		prev = lr.loss_history_train[-1] < prev
 
 	# ## Test 2: check that loss is low (below 1)
     # assert lr.loss_train_history[len(lr.loss_train_history)-1] < 1
