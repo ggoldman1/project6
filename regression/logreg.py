@@ -109,7 +109,6 @@ class LogisticRegression(BaseRegressor):
         Returns: 
             gradients for given loss function (np.ndarray)
         """
-        # import pdb; pdb.set_trace()
         y_pred = self.make_prediction(X)
         m = len(y_pred)
         error = y - y_pred
@@ -131,6 +130,7 @@ class LogisticRegression(BaseRegressor):
             average loss 
         """
         y_pred = self.make_prediction(X)
+        # BCE calculation will not work if y == 1 or y == 0, need to slightly shift down/up
         y_pred = np.where(y_pred == 1, 0.99999, y_pred)
         y_pred = np.where(y_pred == 0, 0.00001, y_pred)
         loss = -((y * np.log(y_pred)) + ((1-y) * (np.log(1-y_pred)))).mean()
@@ -148,16 +148,6 @@ class LogisticRegression(BaseRegressor):
         Returns: 
             y_pred for given X
         """
-        # import pdb; pdb.set_trace()
         data_times_features = X.dot(self.W).flatten()
         return 1/(1+np.e**(-data_times_features))
 
-
-X_train, X_test, y_train, y_test = utils.loadDataset(features=['Penicillin V Potassium 500 MG', 'Computed tomography of chest and abdomen',
-                          'Plain chest X-ray (procedure)',  'Low Density Lipoprotein Cholesterol',
-                          'Creatinine'], split_percent=0.8)
-lr = LogisticRegression(X_train.shape[1], max_iter=10000)
-# lr.W[5] = 0.01
-lr.train_model(X_train, y_train, X_test, y_test)
-print(lr.W)
-lr.plot_loss_history()
