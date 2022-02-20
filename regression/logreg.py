@@ -2,7 +2,6 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import utils
 
 class BaseRegressor():
     def __init__(self, num_feats, learning_rate=0.1, tol=0.001, max_iter=100, batch_size=12):
