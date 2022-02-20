@@ -1,3 +1,5 @@
+![BuildStatus](https://github.com/ggoldman1/Project6/actions/workflows/tests.yml/badge.svg)
+
 # Project 6
 Logistic regression and application to medical record data
 
