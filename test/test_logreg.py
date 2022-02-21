@@ -33,7 +33,7 @@ def test_updates():
 	## Test 2: check that loss is low (below 1)
 	assert lr.loss_history_train[-1] < 1
 
-	## Test 3: check tha tloss gets lower if we allow more iterations
+	## Test 3: check that loss gets lower if we allow more iterations
 	num_iter = [10, 100, 1000, 10000]
 	prev = np.inf
 	for iter in num_iter:
@@ -48,4 +48,28 @@ def test_predict():
 
 	# Check accuracy of model after training
 
-    
+    X_train, X_test, y_train, y_test = regression.utils.loadDataset(
+        features=['Penicillin V Potassium 500 MG', 'Computed tomography of chest and abdomen',
+                  'Plain chest X-ray (procedure)', 'Low Density Lipoprotein Cholesterol',
+                  'Creatinine'], split_percent=0.8)
+    #lr = regression.LogisticRegression(X_train.shape[1])
+    #lr.train_model(X_train, y_train, X_test, y_test)
+
+    ## Test 1: check that weights update with more iterations 
+    ## Test 2: check that more predictions are correct with more iterations
+    num_iter = [1, 10,  100, 1000]
+    prevw = np.array([0, 0, 0, 0, 0, 0])
+    X_train_wcons = np.hstack([X_train, np.ones((X_train.shape[0], 1))])
+    prev_bce = np.inf
+    for iter in num_iter:
+        print(iter)
+        lr = regression.LogisticRegression(X_train.shape[1], max_iter=iter)
+        lr.train_model(X_train, y_train, X_test, y_test)
+        assert not np.all(np.equal(lr.W, prevw))
+        prevw = lr.W
+
+        bce = lr.loss_function(X_train_wcons, y_train)
+        assert prev_bce > bce
+        prev_bce = bce
+        
+
