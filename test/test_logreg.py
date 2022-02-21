@@ -52,17 +52,14 @@ def test_predict():
         features=['Penicillin V Potassium 500 MG', 'Computed tomography of chest and abdomen',
                   'Plain chest X-ray (procedure)', 'Low Density Lipoprotein Cholesterol',
                   'Creatinine'], split_percent=0.8)
-    #lr = regression.LogisticRegression(X_train.shape[1])
-    #lr.train_model(X_train, y_train, X_test, y_test)
 
     ## Test 1: check that weights update with more iterations 
     ## Test 2: check that more predictions are correct with more iterations
-    num_iter = [1, 10,  100, 1000]
+    num_iter = [1, 10,  1000]
     prevw = np.array([0, 0, 0, 0, 0, 0])
     X_train_wcons = np.hstack([X_train, np.ones((X_train.shape[0], 1))])
     prev_bce = np.inf
     for iter in num_iter:
-        print(iter)
         lr = regression.LogisticRegression(X_train.shape[1], max_iter=iter)
         lr.train_model(X_train, y_train, X_test, y_test)
         assert not np.all(np.equal(lr.W, prevw))
