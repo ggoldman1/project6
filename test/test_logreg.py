@@ -55,18 +55,18 @@ def test_predict():
 
     ## Test 1: check that weights update with more iterations 
     ## Test 2: check that more predictions are correct with more iterations
-    num_iter = [1, 5, 100]
+    num_iter = [1, 2, 50]
     prevw = np.array([0, 0, 0, 0, 0, 0])
     prev_bce = np.inf
     
-    X_train_wcons = np.hstack([X_train, np.ones((X_train.shape[0], 1))])
+    X_test_wcons = np.hstack([X_test, np.ones((X_test.shape[0], 1))])
     for iter in num_iter:
         lr = regression.LogisticRegression(X_train.shape[1], max_iter=iter)
         lr.train_model(X_train, y_train, X_test, y_test)
         assert not np.all(np.equal(lr.W, prevw))
         prevw = lr.W
 
-        bce = lr.loss_function(X_train_wcons, y_train)
+        bce = lr.loss_function(X_test_wcons, y_test)
         assert prev_bce > bce
         prev_bce = bce
         
