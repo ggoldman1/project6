@@ -54,10 +54,12 @@ def test_predict():
                   'Creatinine'], split_percent=0.8)
 
     ## Test 1: check that weights update with more iterations 
-    ## Test 2: check that more predictions are correct with more iterations
+    ## Test 2: check that loss decreases with more iterations
+    ## Test 3: check that more predictions are correct with more iterations
     num_iter = [1, 50]
     prevw = np.array([0, 0, 0, 0, 0, 0])
     prev_bce = np.inf
+    prev_correct = 0
     
     X_test_wcons = np.hstack([X_test, np.ones((X_test.shape[0], 1))])
     for iter in num_iter:
@@ -70,4 +72,8 @@ def test_predict():
         assert prev_bce > bce
         prev_bce = bce
         
-
+        test_pred = np.rint(lr.make_prediction(X_test_wcons))
+        corr = len(np.where(test_pred == y_test)[0])
+        assert corr > prev_correct
+        prev_correct = corr
+        
