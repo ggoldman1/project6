@@ -55,7 +55,7 @@ def test_predict():
 
     ## Test 1: check that weights update with more iterations 
     ## Test 2: check that more predictions are correct with more iterations
-    num_iter = [1, 2, 50]
+    num_iter = [1, 50]
     prevw = np.array([0, 0, 0, 0, 0, 0])
     prev_bce = np.inf
     
